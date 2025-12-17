@@ -1,0 +1,14 @@
+{
+  "description": "Benvenuti su RSM, qui troverai misteri affascinanti!",
+  "articles": [
+    {
+      "title": "Primo articolo",
+      "content": "Questo è il contenuto del primo articolo"
+    },
+    {
+      "title": "Secondo articolo",
+      "content": "Qui puoi aggiungere altre informazioni interessanti"
+    }
+  ]
+}
+Aggiunto file dati
