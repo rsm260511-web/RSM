@@ -1,16 +1,14 @@
 {
-  "description": "Benvenuti su RSM, qui troverai misteri affascinanti!",
+  "description": "RSM è uno spazio dedicato a misteri, storie nascoste e verità che pochi osano raccontare.",
   "articles": [
-    {
-      "title": "Le piramidi di Giza",
-      "content": "Questo è il contenuto del primo articolo"
-    },
     {
       "title": "Secondo articolo",
       "content": "Qui puoi aggiungere altre informazioni interessanti"
     },
-{
-  "title": "La stanza segreta sotto il Vaticano",
-  "content": "Secondo alcune fonti esisterebbe una stanza nascosta che custodisce documenti proibiti..."
-}
+    {
+      "title": "La stanza segreta sotto il Vaticano",
+      "content": "Secondo alcune fonti esisterebbe una stanza nascosta che custodisce documenti proibiti..."
+    }
   ]
+}
+
