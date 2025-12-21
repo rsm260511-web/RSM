@@ -142,6 +142,20 @@
   <section id="singleArticle" class="card">
     <h2 id="singleTitle"></h2>
     <div id="singleContent"></div>
+
+    <!-- Like/Dislike -->
+    <div style="margin-top:20px;">
+      <button id="likeBtn">👍 Mi piace (<span id="likeCount">0</span>)</button>
+      <button id="dislikeBtn">👎 Non mi piace (<span id="dislikeCount">0</span>)</button>
+    </div>
+
+    <!-- Commenti -->
+    <div style="margin-top:20px;">
+      <h3>Commenti</h3>
+      <textarea id="commentInput" rows="3" placeholder="Scrivi un commento..."></textarea>
+      <button onclick="addComment()">Invia commento</button>
+      <div id="commentsList" style="margin-top:10px;"></div>
+    </div>
   </section>
 
   <section id="admin" class="card">
@@ -172,6 +186,8 @@
       document.getElementById('publicDescription').innerText = data.description;
       document.getElementById('siteDescription').value = data.description;
       articles = data.articles;
+      // Inizializza like, dislike e commenti
+      articles.forEach(() => { likes.push(0); dislikes.push(0); comments.push([]); });
       renderArticles();
     })
     .catch(error => console.error('Errore nel caricamento dei dati:', error));
@@ -223,12 +239,58 @@
     alert('Per aggiungere articoli devi modificare il file data.json su GitHub');
   }
 
+  let currentArticleIndex = null;
+  const likes = [];
+  const dislikes = [];
+  const comments = [];
+
   function openArticle(i) {
+    currentArticleIndex = i;
     document.getElementById('home').style.display = 'none';
     document.getElementById('admin').style.display = 'none';
     document.getElementById('singleArticle').style.display = 'block';
     document.getElementById('singleTitle').innerText = articles[i].title;
     document.getElementById('singleContent').innerHTML = articles[i].content;
+
+    document.getElementById('likeCount').innerText = likes[i];
+    document.getElementById('dislikeCount').innerText = dislikes[i];
+
+    renderComments(i);
+  }
+
+  document.getElementById('likeBtn').onclick = () => {
+    if (currentArticleIndex !== null) {
+      likes[currentArticleIndex]++;
+      document.getElementById('likeCount').innerText = likes[currentArticleIndex];
+    }
+  };
+
+  document.getElementById('dislikeBtn').onclick = () => {
+    if (currentArticleIndex !== null) {
+      dislikes[currentArticleIndex]++;
+      document.getElementById('dislikeCount').innerText = dislikes[currentArticleIndex];
+    }
+  };
+
+  function addComment() {
+    const input = document.getElementById('commentInput');
+    if (currentArticleIndex !== null && input.value.trim() !== '') {
+      comments[currentArticleIndex].push(input.value.trim());
+      input.value = '';
+      renderComments(currentArticleIndex);
+    }
+  }
+
+  function renderComments(i) {
+    const list = document.getElementById('commentsList');
+    list.innerHTML = '';
+    comments[i].forEach(c => {
+      const div = document.createElement('div');
+      div.style.padding = '6px';
+      div.style.borderBottom = '1px solid #2a2a35';
+      div.innerText = c;
+      list.appendChild(div);
+    });
   }
 
   function showHome() {
@@ -261,5 +323,4 @@
 
 </body>
 </html>
-
 
