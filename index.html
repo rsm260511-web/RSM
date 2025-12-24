@@ -1,71 +1,67 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>RSM</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background: #0e0e11;
-      color: #eaeaea;
-    }
-    header {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
-        url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee');
-      background-size: cover;
-      background-position: center;
-      padding: 80px 20px;
-      text-align: center;
-    }
-    header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 48px;
-      margin: 0;
-    }
-    nav {
-      background: #15151c;
-      padding: 12px;
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    nav a {
-      color: #eaeaea;
-      text-decoration: none;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    main {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
-    .card {
-      background: #1c1c25;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 20px;
-    }
-    button, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 6px;
-      border: none;
-      font-family: 'Montserrat', sans-serif;
-    }
-    button {
-      background: #6f7cff;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover { background: #5a66e0; }
-    #singleArticle { display: none; }
-  </style>
+<meta charset="UTF-8">
+<title>RSM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:Montserrat,sans-serif;
+  background:#0e0e11;
+  color:#eaeaea;
+}
+header{
+  padding:60px 20px;
+  text-align:center;
+}
+header h1{
+  font-family:'Playfair Display',serif;
+  font-size:48px;
+}
+nav{
+  background:#15151c;
+  padding:10px;
+}
+nav a{
+  margin-right:12px;
+  cursor:pointer;
+  font-weight:600;
+}
+main{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+.card{
+  background:#1c1c25;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+}
+button{
+  padding:8px 12px;
+  margin-right:10px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+textarea{
+  width:100%;
+  margin-top:10px;
+  padding:10px;
+}
+#singleArticle{display:none}
+.comment{
+  border-bottom:1px solid #333;
+  padding:6px 0;
+}
+</style>
 </head>
+
 <body>
 
 <header>
@@ -74,103 +70,119 @@
 
 <nav>
   <a onclick="showHome()">Home</a>
+  <span id="titlesContainer"></span>
 </nav>
 
 <main>
-  <section id="home">
-    <div class="card">
-      <h2>Chi siamo?</h2>
-      <p id="publicDescription"></p>
-    </div>
-    <section id="articles"></section>
-  </section>
 
-  <section id="singleArticle" class="card">
-    <h2 id="singleTitle"></h2>
-    <div id="singleContent"></div>
+<section id="home">
+  <div class="card">
+    <p id="siteDescription"></p>
+  </div>
+  <div id="articles"></div>
+</section>
 
-    <div style="margin-top:20px">
-      <button onclick="sendLike(currentArticle)">👍 Like</button>
-      <button onclick="sendDislike(currentArticle)">👎 Non mi piace</button>
+<section id="singleArticle" class="card">
+  <h2 id="articleTitle"></h2>
+  <p id="articleContent"></p>
 
-      <h3 style="margin-top:20px">Commenti</h3>
-      <div id="comments"></div>
+  <div style="margin-top:20px">
+    <button onclick="like()">👍 Like (<span id="likeCount">0</span>)</button>
+    <button onclick="dislike()">👎 Dislike (<span id="dislikeCount">0</span>)</button>
+  </div>
 
-      <textarea id="commentText" placeholder="Scrivi un commento"></textarea>
-      <button onclick="sendComment(currentArticle)">Invia commento</button>
-    </div>
-  </section>
+  <h3 style="margin-top:20px">Commenti</h3>
+  <div id="comments"></div>
+
+  <textarea id="commentText" placeholder="Scrivi un commento"></textarea>
+  <button onclick="addComment()">Invia</button>
+</section>
+
 </main>
 
 <script>
-let articles = [];
-let currentArticle = 0;
+let articles=[];
+let current=null;
 
-// carica data.json
-fetch('https://raw.githubusercontent.com/rsm260511-web/RSM/refs/heads/main/data.json')
-  .then(r => r.json())
-  .then(data => {
-    document.getElementById('publicDescription').innerText = data.description;
-    articles = data.articles;
-    renderArticles();
+fetch('https://raw.githubusercontent.com/rsm260511-web/RSM/main/data.json')
+.then(r=>r.json())
+.then(data=>{
+  document.getElementById('siteDescription').innerText=data.description||'';
+  articles=data.articles||[];
+  renderArticles();
+});
+
+function renderArticles(){
+  const a=document.getElementById('articles');
+  const t=document.getElementById('titlesContainer');
+  a.innerHTML='';
+  t.innerHTML='';
+
+  articles.forEach((art,i)=>{
+    const c=document.createElement('div');
+    c.className='card';
+    c.innerHTML=`<h2>${art.title}</h2>`;
+    c.onclick=()=>openArticle(i);
+    a.appendChild(c);
+
+    const link=document.createElement('a');
+    link.textContent=art.title;
+    link.onclick=()=>openArticle(i);
+    t.appendChild(link);
   });
+}
 
-function renderArticles() {
-  const c = document.getElementById('articles');
-  c.innerHTML = '';
-  articles.forEach((a, i) => {
-    const d = document.createElement('div');
-    d.className = 'card';
-    d.innerHTML = `<h2>${a.title}</h2>`;
-    d.onclick = () => openArticle(i);
+function openArticle(i){
+  current=i;
+  document.getElementById('home').style.display='none';
+  document.getElementById('singleArticle').style.display='block';
+
+  const art=articles[i];
+  document.getElementById('articleTitle').innerText=art.title;
+  document.getElementById('articleContent').innerText=art.content;
+
+  document.getElementById('likeCount').innerText=art.likes||0;
+  document.getElementById('dislikeCount').innerText=art.dislikes||0;
+
+  renderComments();
+}
+
+function showHome(){
+  document.getElementById('home').style.display='block';
+  document.getElementById('singleArticle').style.display='none';
+}
+
+function like(){
+  articles[current].likes=(articles[current].likes||0)+1;
+  document.getElementById('likeCount').innerText=articles[current].likes;
+}
+
+function dislike(){
+  articles[current].dislikes=(articles[current].dislikes||0)+1;
+  document.getElementById('dislikeCount').innerText=articles[current].dislikes;
+}
+
+function addComment(){
+  const txt=document.getElementById('commentText');
+  if(!txt.value.trim())return;
+  if(!articles[current].comments)articles[current].comments=[];
+  articles[current].comments.push(txt.value.trim());
+  txt.value='';
+  renderComments();
+}
+
+function renderComments(){
+  const c=document.getElementById('comments');
+  c.innerHTML='';
+  (articles[current].comments||[]).forEach(com=>{
+    const d=document.createElement('div');
+    d.className='comment';
+    d.innerText=com;
     c.appendChild(d);
   });
-}
-
-function openArticle(i) {
-  currentArticle = i;
-  document.getElementById('home').style.display = 'none';
-  document.getElementById('singleArticle').style.display = 'block';
-
-  document.getElementById('singleTitle').innerText =
-    `${articles[i].title} 👍 ${articles[i].likes} 👎 ${articles[i].dislikes}`;
-
-  document.getElementById('singleContent').innerHTML = articles[i].content;
-
-  document.getElementById('comments').innerHTML =
-    articles[i].comments.map(c => `<p>💬 ${c}</p>`).join('');
-}
-
-function showHome() {
-  document.getElementById('home').style.display = 'block';
-  document.getElementById('singleArticle').style.display = 'none';
-}
-
-// === GITHUB ISSUES ===
-function sendLike(i) {
-  window.open(
-    `https://github.com/rsm260511-web/RSM/issues/new?title=LIKE:${i}`,
-    '_blank'
-  );
-}
-
-function sendDislike(i) {
-  window.open(
-    `https://github.com/rsm260511-web/RSM/issues/new?title=DISLIKE:${i}`,
-    '_blank'
-  );
-}
-
-function sendComment(i) {
-  const t = document.getElementById('commentText').value.trim();
-  if (!t) return alert("Scrivi un commento");
-
-  window.open(
-    `https://github.com/rsm260511-web/RSM/issues/new?title=COMMENT:${i}&body=${encodeURIComponent(t)}`,
-    '_blank'
-  );
 }
 </script>
 
 </body>
 </html>
+
