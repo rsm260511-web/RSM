@@ -1,13 +1,9 @@
 {
-  "description": "",
+  "description": "RSM è uno spazio dedicato all’esplorazione di misteri del mondo. Qui troverai storie documentate, eventi storici poco conosciuti e dati raccolti da fonti diverse, per stimolare curiosità e approfondimento.",
   "articles": [
     {
-      "title": "Articolo di prova",
-      "content": "Questo è un articolo di prova.",
-      "likes": 0,
-      "dislikes": 0,
-      "comments": []
+      "title": "Le catacombe di Parigi",
+      "content": "Sotto le strade di Parigi si estende una rete di tunnel lunga oltre 300 km, originariamente cave di pietra usate per costruire la città. Nel XVIII secolo, a causa della sovrappopolazione dei cimiteri cittadini, vennero trasferiti milioni di scheletri nelle catacombe. Oggi solo circa 1,5 km sono accessibili al pubblico. Le catacombe contengono iscrizioni, mappe antiche, camere commemorative e percorsi secondari che non sono ufficialmente mappati. La gestione delle catacombe è affidata al Museo dei Monumenti Francesi, e le ispezioni hanno rivelato alcuni passaggi chiusi per sicurezza. Esplorazioni urbane hanno documentato segni di tunnel aggiuntivi e stanze sconosciute, ma la maggior parte rimane non accessibile."
     }
   ]
 }
-
