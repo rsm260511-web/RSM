@@ -88,22 +88,6 @@ main{
   border-radius:10px;
   margin-bottom:20px;
 }
-button{
-  padding:10px;
-  margin-top:10px;
-  background:#6f7cff;
-  border:none;
-  border-radius:6px;
-  color:white;
-  cursor:pointer;
-}
-button:hover{background:#5a66e0}
-
-#singleArticle{display:none}
-.comment{
-  border-bottom:1px solid #2a2a35;
-  padding:6px 0;
-}
 </style>
 </head>
 
@@ -136,17 +120,6 @@ button:hover{background:#5a66e0}
 <section id="singleArticle" class="card">
   <h2 id="singleTitle"></h2>
   <div id="singleContent" style="line-height:1.6"></div>
-
-  <div style="margin-top:25px">
-    <button onclick="like()">👍 Mi piace (<span id="likeCount">0</span>)</button>
-    <button onclick="dislike()">👎 Non mi piace (<span id="dislikeCount">0</span>)</button>
-
-    <h3 style="margin-top:25px">Commenti</h3>
-    <div id="comments"></div>
-
-    <textarea id="commentText" placeholder="Scrivi un commento"></textarea>
-    <button onclick="addComment()">Invia commento</button>
-  </div>
 </section>
 
 </main>
@@ -189,48 +162,14 @@ function openArticle(i){
   document.getElementById('singleArticle').style.display='block';
 
   const a=articles[i];
-  a.likes ??=0;
-  a.dislikes ??=0;
-  a.comments ??=[];
-
   document.getElementById('singleTitle').innerText=a.title;
   document.getElementById('singleContent').innerText=a.content;
-  document.getElementById('likeCount').innerText=a.likes;
-  document.getElementById('dislikeCount').innerText=a.dislikes;
-
-  renderComments();
   hideSearch();
 }
 
 function showHome(){
   document.getElementById('home').style.display='block';
   document.getElementById('singleArticle').style.display='none';
-}
-
-function like(){ articles[current].likes++; updateCounts(); }
-function dislike(){ articles[current].dislikes++; updateCounts(); }
-function updateCounts(){
-  document.getElementById('likeCount').innerText=articles[current].likes;
-  document.getElementById('dislikeCount').innerText=articles[current].dislikes;
-}
-
-function addComment(){
-  const t=document.getElementById('commentText');
-  if(!t.value.trim())return;
-  articles[current].comments.push(t.value.trim());
-  t.value='';
-  renderComments();
-}
-
-function renderComments(){
-  const c=document.getElementById('comments');
-  c.innerHTML='';
-  articles[current].comments.forEach(x=>{
-    const d=document.createElement('div');
-    d.className='comment';
-    d.innerText=x;
-    c.appendChild(d);
-  });
 }
 
 /* SEARCH GOOGLE-LIKE */
